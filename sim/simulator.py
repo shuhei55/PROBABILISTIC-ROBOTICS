@@ -51,13 +51,16 @@ class Sim:
         self.omega += (self.ep + (random.random() - 0.5) * 0.00001) * self.DT
 
     def get_enc(self):
-        return [(self.x - self.b_x) * (1 + 0.3 * (random.random() - 0.5)), (self.y - self.b_y) * (1 + 0.3 * (random.random() - 0.5))]
+        return np.array([[math.cos(self.theta), math.sin(self.theta)],[math.sin(self.theta),math.cos(self.theta)]]) * np.array([(self.x - self.b_x) * (1 + 0.3 * (random.random() - 0.6)), (self.y - self.b_y) * (1 + 0.3 * (random.random() - 0.4))])
 
     def get_x_length(self):
         return self.x + 20 * (random.random() - 0.5)
 
     def get_y_length(self):
         return self.y + 20 * (random.random() - 0.5)
+
+    def get_gyro(self):
+        return self.omega + (random.random() - 0.5) * 0.000001
 
 #以下はx=4000, x=-4000, y= 4000, y=-4000に柵があると過程したときのもの
 #angleはマシンの正面からみた角度右が正
