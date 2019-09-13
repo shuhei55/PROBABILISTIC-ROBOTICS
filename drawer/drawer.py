@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import matplotlib.patches as pat
+from matplotlib.widgets import Button
 import math
 
 class Drawing():
@@ -15,7 +16,8 @@ class Drawing():
         self.ax.set_xlabel('X [m]') 
         self.ax.set_ylabel('Y [m]') 
         self.ax.grid(True)
-        self.ani = animation.FuncAnimation(self.fig, func, interval=100, frames=1000)
+        self.playButton  = self.__createButton(0, 0, 0.15, 0.1, "play/pause", self.stop_animation) # (左下 x 座標, 左下 y 座標, 幅, 高さ, ラベル, バインドする函数)
+        self.ani = animation.FuncAnimation(self.fig, func, interval=100, frames=10)
 
     def draw_point(self, center_x, center_y, c = "r", pointsize=3):#人の大きさは半径15cm
         return self.ax.plot(center_x, center_y, ".", color=c,markersize=pointsize)
@@ -27,11 +29,22 @@ class Drawing():
 
     def draw_arraw(self,start_x,start_y,end_x,end_y):
         return self.ax.annotate('', xy=(end_x,end_y), xytext=(start_x,start_y),
-            arrowprops=dict(arrowstyle='-|>', 
-                            connectionstyle='arc3', 
-                            facecolor='C0', 
-                            edgecolor='C0')
+                arrowprops=dict(shrink=0, width=0.5, headwidth=2, 
+                                headlength=2, connectionstyle='arc3',
+                                facecolor='gray', edgecolor='gray')
            )
+
+    def draw_line(self,p1,p2,c="g"):
+        return self.ax.plot([p1[0],p2[0]], [p1[1],p2[1]], color = c)
+
+    def stop_animation(self,event):
+        self.ani.event_source.stop()
+
+    def __createButton(self, bottomLeftX, bottomLeftY, width, height, label, func):
+        box    = self.fig.add_axes([bottomLeftX, bottomLeftY, width, height]) # ボタン用の枠を描いて、
+        button = Button(box, label)                                           # それをボタンとして実体化して、
+        button.on_clicked(func)                                               # クリックされたときに実行する函数をバインドする。
+        return button
 
     def show(self):
         plt.show()

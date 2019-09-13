@@ -45,10 +45,10 @@ class Sim:
         self.b_y = self.y
         self.x += (self.dx * self.DT + 0.5 * self.ddx * self.DT**2)
         self.y += (self.dy * self.DT + 0.5 * self.ddy * self.DT**2)
-        self.dx += (self.ddx + (random.random() - 0.5) * 0.3) * self.DT
-        self.dy += (self.ddy + (random.random() - 0.5) * 0.3) * self.DT
+        self.dx += (self.ddx + (random.random() - 0.5) * 0.1) * self.DT
+        self.dy += (self.ddy + (random.random() - 0.5) * 0.1) * self.DT
         self.theta += (self.omega * self.DT + 0.5 * self.ep * self.DT**2)
-        self.omega += self.ep * self.DT
+        self.omega += (self.ep + (random.random() - 0.5) * 0.00001) * self.DT
 
     def get_enc(self):
         return [(self.x - self.b_x) * (1 + 0.1 * (random.random() - 0.5)), (self.y - self.b_y) * (1 + 0.1 * (random.random() - 0.5))]
@@ -60,5 +60,37 @@ class Sim:
         return self.y + 20 * (random.random() - 0.5)
 
 #以下はx=4000, x=-4000, y= 4000, y=-4000に柵があると過程したときのもの
-    def get_wall_length(self,):
+#angleはマシンの正面からみた角度右が正
+    def get_wall_length(self,angle):
+        field_angle = self.theta + angle
+        ls = []
+        #x = 4000
+        length = (4000 - self.x) / np.float64(math.sin(field_angle))
+        if  length < 0 or length == np.inf:
+            ls.append(np.inf)
+        else :
+            ls.append(length)
+        #x = -4000
+        length = (4000 + self.x) / np.float64(math.sin(-field_angle))
+        if  length < 0 or length == np.inf:
+            ls.append(np.inf)
+        else :
+            ls.append(length)
+        #y = 4000
+        length = (4000 - self.y) / np.float64(math.cos(field_angle))
+        if  length < 0 or length == np.inf:
+            ls.append(np.inf)
+        else :
+            ls.append(length)
+        #y = -4000
+        length = (4000 + self.x) / np.float64(math.cos(-field_angle))
+        if  length < 0 or length == np.inf:
+            ls.append(np.inf)
+        else :
+            ls.append(length)
+
+        if min(ls) == np.inf:
+            return np.inf
+        else:
+            return min(ls) + (random.random() - 0.5) * 5
 
