@@ -12,21 +12,23 @@ class Map:
     def __init__(self):
         self.x = 0
         self.y = 0
-        self.dx = 0
-        self.dy = 0
         self.Pxy = np.array([10,10])
+
+    def set_pos(self, pos):
+        self.x = pos[0]
+        self.y = pos[1]
 
     def update(self, sim):
         self.x += sim.get_enc()[0]
         self.y += sim.get_enc()[1]
-        self.Pxy += np.array([100,100])
+        self.Pxy += np.array([900,900])
 
     def update2(self, sim):
         tmp = np.array([sim.get_x_length() - self.x, sim.get_y_length() - self.y])
-        tmp[0] = tmp[0] * (self.Pxy[0] / (self.Pxy[0] + 100.0))
-        tmp[1] = tmp[1] * (self.Pxy[1] / (self.Pxy[1] + 100.0))
+        tmp[0] = tmp[0] * (self.Pxy[0] / (self.Pxy[0] + 400.0))
+        tmp[1] = tmp[1] * (self.Pxy[1] / (self.Pxy[1] + 400.0))
         self.x += tmp[0]
         self.y += tmp[1]
-        self.Pxy[0] *= 1 - (self.Pxy[0]/(self.Pxy[0] + 100.0))
-        self.Pxy[1] *= 1 - (self.Pxy[1]/(self.Pxy[1] + 100.0))
+        self.Pxy[0] *= 1 - (self.Pxy[0]/(self.Pxy[0] + 400.0))
+        self.Pxy[1] *= 1 - (self.Pxy[1]/(self.Pxy[1] + 400.0))
 

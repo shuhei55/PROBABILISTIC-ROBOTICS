@@ -51,7 +51,7 @@ class Sim:
         self.omega += (self.ep + (random.random() - 0.5) * 0.00001) * self.DT
 
     def get_enc(self):
-        return [(self.x - self.b_x) * (1 + 0.1 * (random.random() - 0.5)), (self.y - self.b_y) * (1 + 0.1 * (random.random() - 0.5))]
+        return [(self.x - self.b_x) * (1 + 0.3 * (random.random() - 0.5)), (self.y - self.b_y) * (1 + 0.3 * (random.random() - 0.5))]
 
     def get_x_length(self):
         return self.x + 20 * (random.random() - 0.5)

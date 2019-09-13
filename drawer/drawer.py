@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import matplotlib.patches as pat
-from matplotlib.widgets import Button
+from matplotlib.widgets import Button, Slider
 import math
 
 class Drawing():
@@ -16,8 +16,10 @@ class Drawing():
         self.ax.set_xlabel('X [m]') 
         self.ax.set_ylabel('Y [m]') 
         self.ax.grid(True)
-        self.playButton  = self.__createButton(0, 0, 0.15, 0.1, "play/pause", self.stop_animation) # (左下 x 座標, 左下 y 座標, 幅, 高さ, ラベル, バインドする函数)
+        self.stopButton  = self.__createButton(0, 0, 0.15, 0.1, "stop", self.start_stop_animation) # (左下 x 座標, 左下 y 座標, 幅, 高さ, ラベル, バインドする函数)
+        self.resetButton  = self.__createButton(0, 0.1, 0.15, 0.1, "reset", self.reset_animation) # (左下 x 座標, 左下 y 座標, 幅, 高さ, ラベル, バインドする函数)
         self.ani = animation.FuncAnimation(self.fig, func, interval=100, frames=10)
+        self.is_start = True
 
     def draw_point(self, center_x, center_y, c = "r", pointsize=3):#人の大きさは半径15cm
         return self.ax.plot(center_x, center_y, ".", color=c,markersize=pointsize)
@@ -37,8 +39,19 @@ class Drawing():
     def draw_line(self,p1,p2,c="g"):
         return self.ax.plot([p1[0],p2[0]], [p1[1],p2[1]], color = c)
 
+    def start_stop_animation(self,event):
+        if self.is_start:
+            self.ani.event_source.stop()
+            self.is_start = False
+        else :
+            self.ani.event_source.start()
+            self.is_start = True
+
     def stop_animation(self,event):
         self.ani.event_source.stop()
+
+    def reset_animation(self, event):
+        pass
 
     def __createButton(self, bottomLeftX, bottomLeftY, width, height, label, func):
         box    = self.fig.add_axes([bottomLeftX, bottomLeftY, width, height]) # ボタン用の枠を描いて、
