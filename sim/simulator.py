@@ -70,7 +70,7 @@ class Sim:
 #angleはマシンの正面からみた角度右が正
     def get_single_wall_length(self, angle):
         field_angle = self.theta + angle
-        length = self.x / np.float64(np.sin(field_angle))
+        length = -self.x / np.float64(np.sin(field_angle))
         if length < 0 or length == np.inf:
             return np.inf
         else :

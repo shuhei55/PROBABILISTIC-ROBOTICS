@@ -10,32 +10,23 @@ import random
 class Map:
     DT = 10 #ms
     def __init__(self):
-        self.x = 0
-        self.y = 0
-        self.theta = 0
+        self.x = np.array([0,0,0])
         self.Pxy = np.array([[10,0,0],
-                            [0,10,0],
-                            [0,0,10]])
+                             [0,10,0],
+                             [0,0,0.0001]])
 
     def set_pos(self, pos):
-        self.x = pos[0]
-        self.y = pos[1]
-        self.theta = pos[2]
+        self.x = np.array(pos)
+        self.Pxy = np.array([[10,0,0],
+                             [0,10,0],
+                             [0,0,0.0001]])
 
     def update(self, sim):
-        self.x += sim.get_enc()[0]
-        self.y += sim.get_enc()[1]
-        self.theta += sim.get_gyro() * sim.DT
-        self.Pxy += np.array([[2500,0,0],
-                             [0,2500,0],
-                             [0,0,2500]])
+        self.x += np.array([0,0,sim.get_gyro() * self.DT])
+        self.x += np.dot(np.array([[np.cos(-self.x[2]),-np.sin(-self.x[2])],[np.sin(-self.x[2]),np.cos(-self.x[2])],[0,0]]),sim.get_enc().T)
+        self.Pxy += np.array([[1600,0,0],
+                             [0,1600,0],
+                             [0,0,0.00000001]])
 
     def update2(self, sim):
-        tmp = np.array([sim.get_x_length() - self.x, sim.get_y_length() - self.y])
-        tmp[0] = tmp[0] * (self.Pxy[0] / (self.Pxy[0] + 400.0))
-        tmp[1] = tmp[1] * (self.Pxy[1] / (self.Pxy[1] + 400.0))
-        self.x += tmp[0]
-        self.y += tmp[1]
-        self.Pxy[0] *= 1 - (self.Pxy[0]/(self.Pxy[0] + 400.0))
-        self.Pxy[1] *= 1 - (self.Pxy[1]/(self.Pxy[1] + 400.0))
-
+        pass
