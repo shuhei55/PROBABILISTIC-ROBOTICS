@@ -25,7 +25,7 @@ def plot(data):
 
 cnt = 0
 
-simulator = simulator.Sim(0,0,0,0,0,0) #x,y,theta,dx,dy,dtheta
+simulator = simulator.Sim(0,0,0,0,0,0) #x,y,dx,dy,theta,dtheta
 simulator.setacc(0,0,0) #ddx,ddy,ddtheta
 simulator.setpos(-3000,-3000,5,5,-1.57,0.0000) #x,y,dx,dy,theta,dtheta
 

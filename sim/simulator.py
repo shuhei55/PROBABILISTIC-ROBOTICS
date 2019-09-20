@@ -65,9 +65,21 @@ class Sim:
     def get_gyro(self):
         return self.omega + (random.random() - 0.5) * 0.000001
 
+
+#x=0の柵があると過程したとき
+#angleはマシンの正面からみた角度右が正
+    def get_single_wall_length(self, angle):
+        field_angle = self.theta + angle
+        length = self.x / np.float64(np.sin(field_angle))
+        if length < 0 or length == np.inf:
+            return np.inf
+        else :
+            return length + (random.random() - 0.5) * 5
+
+
 #以下はx=4000, x=-4000, y= 4000, y=-4000に柵があると過程したときのもの
 #angleはマシンの正面からみた角度右が正
-    def get_wall_length(self,angle):
+    def get_multi_wall_length(self,angle):
         field_angle = self.theta + angle
         ls = []
         #x = 4000
