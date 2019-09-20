@@ -51,13 +51,16 @@ class Sim:
         self.omega += (self.ep + (random.random() - 0.5) * 0.00001) * self.DT
 
     def get_enc(self):
-        return np.array([[math.cos(self.theta), math.sin(self.theta)],[math.sin(self.theta),math.cos(self.theta)]]) * np.array([(self.x - self.b_x) * (1 + 0.3 * (random.random() - 0.6)), (self.y - self.b_y) * (1 + 0.3 * (random.random() - 0.4))])
+        return np.dot(np.array([[np.cos(self.theta), -np.sin(self.theta)],[np.sin(self.theta), np.cos(self.theta)]]), np.array([(self.x - self.b_x) * (1 + 0.3 * (random.random() - 0.6)), (self.y - self.b_y) * (1 + 0.3 * (random.random() - 0.4))]).T)
 
     def get_x_length(self):
         return self.x + 20 * (random.random() - 0.5)
 
     def get_y_length(self):
         return self.y + 20 * (random.random() - 0.5)
+
+    def get_theta(self):
+        return self.theta + 0.00000000 * (random.random() - 0.5)
 
     def get_gyro(self):
         return self.omega + (random.random() - 0.5) * 0.000001
@@ -68,25 +71,25 @@ class Sim:
         field_angle = self.theta + angle
         ls = []
         #x = 4000
-        length = (4000 - self.x) / np.float64(math.sin(field_angle))
+        length = (4000 - self.x) / np.float64(np.sin(field_angle))
         if  length < 0 or length == np.inf:
             ls.append(np.inf)
         else :
             ls.append(length)
         #x = -4000
-        length = (4000 + self.x) / np.float64(math.sin(-field_angle))
+        length = (4000 + self.x) / np.float64(np.sin(-field_angle))
         if  length < 0 or length == np.inf:
             ls.append(np.inf)
         else :
             ls.append(length)
         #y = 4000
-        length = (4000 - self.y) / np.float64(math.cos(field_angle))
+        length = (4000 - self.y) / np.float64(np.cos(field_angle))
         if  length < 0 or length == np.inf:
             ls.append(np.inf)
         else :
             ls.append(length)
         #y = -4000
-        length = (4000 + self.x) / np.float64(math.cos(-field_angle))
+        length = (4000 + self.x) / np.float64(np.cos(-field_angle))
         if  length < 0 or length == np.inf:
             ls.append(np.inf)
         else :

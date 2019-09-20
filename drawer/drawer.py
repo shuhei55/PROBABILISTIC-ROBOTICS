@@ -29,11 +29,11 @@ class Drawing():
         e1 = pat.Ellipse(xy = (center_x, center_y), width = size_x, height = size_y, angle = 0,fc = None, fill = False,ec = c)
         return self.ax.add_patch(e1)
 
-    def draw_arraw(self,start_x,start_y,end_x,end_y):
+    def draw_arraw(self,start_x,start_y,end_x,end_y,c="gray"):
         return self.ax.annotate('', xy=(end_x,end_y), xytext=(start_x,start_y),
                 arrowprops=dict(shrink=0, width=0.5, headwidth=2, 
                                 headlength=2, connectionstyle='arc3',
-                                facecolor='gray', edgecolor='gray')
+                                facecolor='gray', edgecolor=c)
            )
 
     def draw_line(self,p1,p2,c="g"):
