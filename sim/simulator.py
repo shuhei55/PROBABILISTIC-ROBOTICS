@@ -51,7 +51,7 @@ class Sim:
         self.omega += (self.ep + (random.random() - 0.5) * 0.00001) * self.DT
 
     def get_enc(self):
-        return np.dot(np.array([[np.cos(self.theta), -np.sin(self.theta)],[np.sin(self.theta), np.cos(self.theta)]]), np.array([(self.x - self.b_x) * (1 + 0.3 * (random.random() - 0.6)), (self.y - self.b_y) * (1 + 0.3 * (random.random() - 0.4))]).T)
+        return np.array([[np.cos(self.theta), -np.sin(self.theta)],[np.sin(self.theta), np.cos(self.theta)]]) @ np.array([[(self.x - self.b_x) * (1 + 0.3 * (random.random() - 0.6)), (self.y - self.b_y) * (1 + 0.3 * (random.random() - 0.4))]]).T
 
     def get_x_length(self):
         return self.x + 20 * (random.random() - 0.5)
