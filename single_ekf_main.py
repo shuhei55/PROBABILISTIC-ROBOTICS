@@ -4,7 +4,7 @@ from drawer import drawer
 import math
 import numpy as np
 from config import config
-from ekf import hoge
+from single_ekf import hoge
 
 
 def plot(data):
@@ -16,8 +16,9 @@ def plot(data):
     #    kf.update2(simulator)
     #ball_img = drawer.draw_arraw(simulator.x,simulator.y, simulator.x+500*math.sin(simulator.theta), simulator.y+500*math.cos(simulator.theta))
     ball_img = drawer.draw_point(simulator.x, simulator.y)
-    ball_img = drawer.draw_point(ekf.x,ekf.y, c='b')
-    ball_img = drawer.draw_circle(ekf.x,ekf.y,np.sqrt(ekf.Pxy[0][0]),np.sqrt(ekf.Pxy[1][1]),c='g')
+    ball_img = drawer.draw_point(ekf.x[0],ekf.x[1], c='b')
+    ball_img = drawer.draw_circle(ekf.x[0],ekf.x[1],np.sqrt(ekf.Pxy[0][0]),np.sqrt(ekf.Pxy[1][1]),c='g')
+    print(simulator.get_single_wall_length(1.57))
     if abs(simulator.x) > 4000 or abs(simulator.y) > 4000 :
         drawer.stop_animation()
     return ball_img
@@ -30,7 +31,7 @@ simulator.setpos(-3000,-3000,5,5,0,0.0001) #x,y,theta,dx,dy,dtheta
 
 ekf = hoge.Map()
 
-ekf.set_pos([-3000,-3000,5,5])
+ekf.set_pos([-3000,-3000,0.0])
 
 drawer = drawer.Drawing(plot)
 
