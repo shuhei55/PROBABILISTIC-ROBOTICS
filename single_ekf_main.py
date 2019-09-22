@@ -18,7 +18,7 @@ def plot(data):
     ball_img = drawer.draw_point(simulator.x, simulator.y)
     ball_img = drawer.draw_point(ekf.x[0],ekf.x[1], c='b')
     ball_img = drawer.draw_circle(ekf.x[0],ekf.x[1],np.sqrt(ekf.Pxy[0][0]),np.sqrt(ekf.Pxy[1][1]),c='g')
-    print(simulator.get_single_wall_length(-1.57))
+    print(simulator.get_single_wall_length(1.57))
     if abs(simulator.x) > 4000 or abs(simulator.y) > 4000 :
         drawer.stop_animation()
     return ball_img

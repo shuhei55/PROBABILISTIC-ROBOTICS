@@ -28,5 +28,14 @@ class Map:
                              [0,1600,0],
                              [0,0,0.00000001]])
 
+
+    def differential(self, angle):
+        return np.array([-(1./np.sin(angle+self.x[2])), 0, -self.x[0]*(-np.cos(angle+self.x[2])/(np.sin(angle+self.x[2])**2))])
+
     def update2(self, sim):
-        pass
+        angle = 1.57
+        y = sim.get_single_wall_length(angle)
+        if y == np.inf:
+            pass
+        else :
+            y_p = - self.x[0] / np.float64(np.sin(angle + self.x[2]))
