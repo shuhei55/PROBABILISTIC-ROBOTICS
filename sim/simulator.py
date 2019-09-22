@@ -89,7 +89,7 @@ class Sim:
         else :
             ls.append(length)
         #x = -4000
-        length = (4000 + self.x) / np.float64(np.sin(-field_angle))
+        length = (-4000 - self.x) / np.float64(np.sin(field_angle))
         if  length < 0 or length == np.inf:
             ls.append(np.inf)
         else :
@@ -101,7 +101,7 @@ class Sim:
         else :
             ls.append(length)
         #y = -4000
-        length = (4000 + self.x) / np.float64(np.cos(-field_angle))
+        length = (-4000 - self.y) / np.float64(np.cos(field_angle))
         if  length < 0 or length == np.inf:
             ls.append(np.inf)
         else :
