@@ -10,7 +10,7 @@ def plot(data):
     ball_img = drawer.draw_point(sim.x,sim.y)
     return ball_img
 
-sim = simulator.Sim(0,0,1,1,0,0) #コンストラクタ
+sim = simulator.Sim(0.,0.,1.,1.,0.,0.) #シミュレーターのコンストラクタ
 
 drawer = drawer.Drawing(plot)
 
