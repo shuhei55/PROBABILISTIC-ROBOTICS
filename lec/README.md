@@ -13,10 +13,12 @@ $ sudo apt update
 $ sudo apt install python3 python3-pip python-pip
 $ sudo pip install numpy matplotlib
 ```
-* 以下のコマンドでdefault.pyが動けばよい
+* 以下のコマンドでdefault.pyが動きしたの写真のようになればよい(赤の点のプロットの仕方は異なります)
 ```
 $ ./default.py
 ```
+![test](./pic/test.png)
+* 左上のツールを使うと拡大できたりするのでもっと見やすくなると思います
 
 ## シミュレーター
 * 詳しくはシミュレーターの関数一覧などを読めば良いがどのようなシミュレーターかについて
@@ -67,13 +69,70 @@ ball_img = config.init(drawer)
 
 drawer.show()
 ```
+![default](./pic/default.png)
 * どうでしょうかそれっぽく自己位置推定できたのではないでしょうか？
 * でも当然ですがだんだんずれていってしまいますね
+* モデルをもっと正確にしたりと、もう少し改善の方法はありますがこれがエンコーダーとジャイロセンサーでの自己位置推定の限界でしょう
+* こっからよくするならば、測距センサーやラインセンサーなどを用いるしかありません
+* 測距センサーはシミュレーターに実装されているのでそれを使ってみるのも良いと思います
+* しかし、測距センサーをうまく自己位置補正につかえるでしょうか？
+* でっち上げで読んでいる柵を予測して適当に自己位置を書き換えることで補正できるでしょう(大体の大学はこういうことしてるんじゃないかなあ)
+* でもマシンが予測しない位置にいたり、帰ってきた値がノイズでおかしくなってたりたりしたときの対応が面倒くさいですね
 
+## 確率論的自己位置推定
+* まずここからは決定論的に自己位置を決めるのではなくて、確率論的に自己位置を推定します
+* どういうことかというと、自己位置の状態量(例えばx,y,theta)とその値の分散を自己位置の情報として常に持ち、それらを時間ごとに更新していくというものです
+* つまり、マシンの自己位置はだいたいこの値を中心としてこの分散の中のどこかにはいるだろうといった感じで自己位置推定を行います
+* 試しに上で行った自己位置推定を確率論的にしたものが下のコードです
+```python3:main.py
+#! /usr/bin/python3
+
+from sim import simulator
+from drawer import drawer
+import numpy as np
+from config import config
+
+def plot(data):
+    global x, y, theta,Ptheta,Px,Py #pythonのグローバル変数を使うときはこうやって宣言してあげなければいけない
+    sim.update()
+    theta += sim.get_gyro() * 10
+    x += (np.array([[np.cos(-theta),-np.sin(-theta)],[np.sin(-theta), np.cos(-theta)]]) @ sim.get_enc())[0][0]
+    y += (np.array([[np.cos(-theta),-np.sin(-theta)],[np.sin(-theta), np.cos(-theta)]]) @ sim.get_enc())[1][0]
+    #分散も更新する
+    #更新の量はセンサーの精度などから適当に決める
+    Ptheta  += 0.0001
+    Px += 100.
+    Py += 100.
+    ball_img = drawer.draw_point(sim.x,sim.y)
+    ball_img = drawer.draw_point(x,y,"g")
+    ball_img = drawer.draw_circle(x,y,np.sqrt(Px),np.sqrt(Py)) #分散は二乗なので同じ次元に落として表示する
+    return ball_img
+
+sim = simulator.Sim(0.,0.,1.,1.,0.,0.) #シミュレーターのコンストラクタ
+
+#自己位置
+x = 0.
+y = 0.
+theta = 0.
+#自己位置の分散
+Px = 10.
+Py = 10.
+Ptheta = 0.0001
+
+drawer = drawer.Drawing(plot)
+
+ball_img = config.init(drawer)
+
+drawer.show()
+```
+* このコードで動かしてみると下のようにF3の自己位置推定に時間が経つごとに大きくなる分散が追加されただけでしょう
+* 赤が実際の自己位置で緑が推定した位置、青の円が分散です
+* しかし赤い点が分散の中に入っているので推定自体は間違っていないのです
+![update\_only](./pic/only_update.png)
 ## カルマンフィルターを用いた自己位置推定
 * 実際の世界にはありえないモデルですが線形モデルで一回考えてみましょう
 * 定期的に一定の分散は乗っているもののマシンの自己位置がなぜか手に入るモデルを考えましょう
-* 疲れたんでコード読んで下さい
+* [このサイト](https://qiita.com/MoriKen/items/0c80ef75749977767b43)などを参考にしてみましょう
 
 ## SingleModelEKF(Extended Kalman Filter)
 * 同上
