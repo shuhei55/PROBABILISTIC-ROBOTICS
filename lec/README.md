@@ -33,7 +33,7 @@ $ ./default.py
 
 ```
 theta += get_gyro() * dt
-X += (回転行列[-theta]) * get_enc() * dt
+X += (回転行列[-theta]) * get_enc()
 ```
 * 簡単なモデルなら上の式みたいな感じでしょうか
 * 実装してみましょう
