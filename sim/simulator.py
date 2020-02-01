@@ -112,3 +112,34 @@ class Sim:
         else:
             return min(ls) + (random.random() - 0.5) * 5
 
+ # マシンの向きに対して垂直方向に12素子並んでいるラインセンサーを仮定する
+ # マシンの中心から左右に素子間の距離を2mmでならんでいる
+ # つまりマシン座標系で(1,0),(-1,0),(3,0),(-3,0)...とならんでいる
+ # x=0(y軸)とy=0(x軸)に幅200mmの線が引かれていてそれを認識できるとする
+ # またノイズとして一定の確率で正負がひっくり返ることがある
+    def get_line_sensor(self):
+        machine_sensor_point = np.array(
+            [
+                [11, 9, 7, 5, 3, 1, -1, -3, -5, -7, -9, -11],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ]
+        )
+        field_sensor_point = np.array(
+            [
+                [np.cos(-self.theta), -np.sin(-self.theta)],
+                [np.sin(-self.theta), np.cos(-self.theta)],
+            ]
+        ) @ machine_sensor_point + np.array([[self.x], [self.y]])
+        data = np.random.rand(12)
+        for i in range(0, len(data)):
+            if (
+                field_sensor_point[0][i] >= -100 and field_sensor_point[0][i] <= 100
+            ) or (field_sensor_point[1][i] >= -100 and field_sensor_point[1][i] <= 100):
+                data[i] -= 0.01
+            else:
+                data[i] -= 0.99
+            if data[i] < 0:
+                data[i] = 0
+            else:
+                data[i] = 1
+        return data

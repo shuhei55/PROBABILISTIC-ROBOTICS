@@ -2,8 +2,16 @@
 * 基本的な自己位置推定をしてみたり
 * ベイズの定理を用いた自己位置推定をしてみたりしましょう
 ## 環境構築
+* このプログラムは普通のUbuntu18.04とWSLのUbuntu18.04でのみ動作確認しています(Macは知らん〇ね)
+#### grip
+* Markdownを読むソフトがない人は個人的なおすすめはgripというソフトです
+```
+$ sudo apt update
+$ sudo apt install grip
+```
+  * このディレクトリの中でgrip -bとコマンドを打てば勝手にウェブブラウザが起動してgithubで見ているように簡単にREADME.mdが読めます
+#### python3
 * このプロジェクトはpython3を使います
-* 基本はC++を使ってきたはずですが、pythonも使えて損はない(どうせ使う)のでこれを機になれましょう(難しいことはしない)
 * python3の環境構築は人それぞれで好きにやってください(jupyter-notebookやanacondaやpyenvなどなど)
 * 一番やってはいけないのはanacondaでやってたのに以下の方法もやるとかです(コンフリクトします)
 * ある程度理解しているなら好きなようにやって良いですが、とりあえず以下の方法でをおすすめします
@@ -11,8 +19,17 @@
 ```
 $ sudo apt update
 $ sudo apt install python3 python3-pip python-pip
-$ sudo pip install numpy matplotlib
+$ sudo pip3 install numpy matplotlib
 ```
+#### WSL
+* WSLの人は自分でなんとかしてほしいですが一応僕の環境で動いた対処方は書いておきます
+  * [参考ページ](http://ai-gaminglife.hatenablog.com/entry/2019/04/29/204841)
+  * XmingまたはVcXsrvなどをインストールする
+  * さっきのコマンドに追加で以下のコマンドをする
+```
+$ sudo apt install python3-tk
+```
+#### 動作確認
 * 以下のコマンドでdefault.pyが動きしたの写真のようになればよい(赤の点のプロットの仕方は異なります)
 ```
 $ python3 default.py
@@ -139,10 +156,7 @@ drawer.show()
 * 上のサイトが非常に直感的にわかりやく書かれているのでここでは説明しません
 * kf/hogeに実装されているのでコードを読んでみて下さい
 * 実際に10回ごとに自己位置が補正されて推定点が実際の点に近づき分散の円が小さくなっているのがわかりましたか？
-  File "<stdin>", line 1
     ![kf](./pic/kf.png)
-    ^
-SyntaxError: invalid syntax
 
 ## SingleModelEKF(Extended Kalman Filter)
 * 上で用いた定期的にマシンの自己位置がそのまま手に入ることなどは現実世界ではまずないので、今回は測距センサーを用いて柵を読んで自己位置の補正を行ってみましょう
